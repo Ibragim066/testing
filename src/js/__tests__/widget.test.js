@@ -1,26 +1,42 @@
-import { InnFormWidget } from "../widget"
+import Widget from '../components/widget/Widget';
 
-test('widget should render', () => {
-    document.body.innerHTML = '<div class="container"></div>';
+describe('Widget', () => {
+    let container;
+    beforeEach(() => {
+        container = document.createElement('div');
+        document.body.appendChild(container);
+    });
 
-    const container = document.querySelector('.container');
-    const widget = new InnFormWidget(container);
+    afterEach(() => {
+        document.body.removeChild(container);
+    });
 
-    widget.bindToDOM();
+    test('throws an error when not provided an HTMLElement', () => {
+        expect(() => new Widget('string')).toThrow('container is not HTMLElement');
+    });
 
-    expect(container.innerHTML).toEqual(InnFormWidget.markup);
-})
+    test('binds correctly to DOM', () => {
+        const widget = new Widget(container);
+        widget.bindToDOM();
 
-test('widget should add valid class', () => {
-    document.body.innerHTML = '<div class="container"></div>';
+        const widgetElement = container.querySelector(Widget.selector);
+        expect(widgetElement).not.toBeNull();
 
-    const container = document.querySelector('.container');
-    const widget = new InnFormWidget(container);
+        expect(widgetElement.querySelector(Widget.formSelector)).not.toBeNull();
+        expect(widgetElement.querySelector(Widget.cardsSelector)).not.toBeNull();
+    });
 
-    widget.bindToDOM();
+    describe('bindToDOM', () => {
+        test.each([
+            [Widget.cardsSelector, 'cards'],
+            [Widget.formSelector, 'form'],
+        ])('creates and binds %s to DOM', (selector, className) => {
+            const widget = new Widget(container);
+            widget.bindToDOM();
 
-    widget.input.value = '7715964180';
-    widget.submit.click();
-
-    expect(widget.input.classList.contains('valid')).toEqual(true);
-})
+            const componentContainer = container.querySelector(selector);
+            expect(componentContainer).not.toBeNull();
+            expect(componentContainer.querySelector(`.${className}`)).not.toBeNull();
+        });
+    });
+});
