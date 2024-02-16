@@ -1,49 +1,49 @@
-import CardsList from '../card-list/CardsList';
 import CheckForm from '../check-form/CheckForm';
+import CardsList from '../card-list/CardList';
 import './widget.css';
 
 export default class Widget {
-    constructor(container) {
-        if (!(container instanceof HTMLElement)) {
-            throw new Error('container is not HTMLElement');
-        }
-
-        this.container = container;
+  constructor(container) {
+    if (!(container instanceof HTMLElement)) {
+      throw new Error('container is not HTMLElement');
     }
 
-    bindToDOM() {
-        this.container.innerHTML = Widget.markup;
+    this.container = container;
+  }
 
-        this.element = this.container.querySelector(Widget.selector);
-        this.formContainer = this.element.querySelector(Widget.formSelector);
-        this.cardsContainer = this.element.querySelector(Widget.cardsSelector);
+  bindToDOM() {
+    this.container.innerHTML = Widget.markup;
 
-        const form = new CheckForm(this.formContainer);
-        form.bindToDOM();
+    this.element = this.container.querySelector(Widget.selector);
+    this.formContainer = this.element.querySelector(Widget.formSelector);
+    this.cardsContainer = this.element.querySelector(Widget.cardsSelector);
 
-        const cards = new CardsList(this.cardsContainer);
-        cards.bindToDOM();
-    }
+    const form = new CheckForm(this.formContainer);
+    form.bindToDOM();
 
-    static get formSelector() {
-        return '.form-container';
-    }
+    const cards = new CardsList(this.cardsContainer);
+    cards.bindToDOM();
+  }
 
-    static get cardsSelector() {
-        return '.cards-container';
-    }
+  static get formSelector() {
+    return '.form-container';
+  }
 
-    static get selector() {
-        return '.widget';
-    }
+  static get cardsSelector() {
+    return '.cards-container';
+  }
 
-    static get markup() {
-        return `
+  static get selector() {
+    return '.widget';
+  }
+
+  static get markup() {
+    return `
       <div class='widget'>
         <h3>Check your credit card number</h3>
         <div class='form-container'></div>
         <div class='cards-container'></div>
       </div>
     `;
-    }
+  }
 }
